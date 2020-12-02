@@ -7,7 +7,7 @@ class ZilData(models.Model):
     dersbaslangicsaati = models.TimeField(verbose_name='Derslerin Başlangıç Saati', default='09:00:00', auto_now=False)
     toplanmasuresi = models.SmallIntegerField(verbose_name='Toplanma Süresi', default=600)
     ogretmenzilsuresi = models.SmallIntegerField(verbose_name='Öğretmen Ders Bildirim Zili', default=180)
-    derssayisi = models.SmallIntegerField(verbose_name='Günlük Ders Sayısı', default=10)
+    derssayisi = models.SmallIntegerField(verbose_name='Günlük  Ders Sayısı', default=10)
     derssuresi = models.SmallIntegerField(verbose_name='Ders Süresi', default=1800)
     tenefussuresi = models.SmallIntegerField(verbose_name='Tenefüs Süresi', default=600)
     oglenarasiders = models.SmallIntegerField(verbose_name='Öğlen Arası', default=6)
