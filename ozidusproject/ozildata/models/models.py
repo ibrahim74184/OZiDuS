@@ -1,6 +1,7 @@
 from django.db import models
 
 
+
 # Create your models here.
 class ZilData(models.Model):
     dersbaslangicsaati = models.TimeField(verbose_name='Derslerin Başlangıç Saati', default='09:00:00', auto_now=False)
