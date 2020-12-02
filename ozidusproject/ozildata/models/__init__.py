@@ -1,1 +1,1 @@
-from . defaultzildata  import models
+from . defaultzildata import ZilData
