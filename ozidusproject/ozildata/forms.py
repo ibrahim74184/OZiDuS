@@ -9,3 +9,4 @@ class ZilDataForm(forms.ModelForm):
         fields = ('toplanmasuresi', 'ogretmenzilsuresi', 'derssayisi', 'derssuresi',
                   'tenefussuresi', 'oglenarasiders', 'zilgun', 'dersbaslangicsaati',
                   'oglenarasisuresi', 'active')
+        exclude = ('published_date', 'id',)

@@ -35,12 +35,14 @@ INSTALLED_APPS = [
     'ozildata.apps.OzildataConfig',
     'ozilgiris.apps.OzilgirisConfig',
     'ozilanons.apps.OzilanonsConfig',
+    'django_tables2',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
 ]
 
 MIDDLEWARE = [

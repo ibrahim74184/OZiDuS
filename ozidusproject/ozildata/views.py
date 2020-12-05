@@ -1,38 +1,26 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
 from .models import ZilData
+from .tables import ZilayarTable
 from .forms import ZilDataForm
 from datetime import datetime
+from django_tables2 import SingleTableView
 
 
 # Create your views here.
 
-def GunZiliOlustur():
-    zil2 = ZilData.objects.all()
-    for gun in range(len(zil2)):
-        print(zil2[gun].zilgun)
-
-
 def index(request):
-    zil1 = ZilData.objects.all()
-    GunZiliOlustur()
-    evenNumberList = [item for item in zil1]
-    return render(request, 'ozildata/index.html', {'evenNumberList': evenNumberList})
+    return render(request, 'ozildata/index.html')
 
 
-"""
-def detail(request):
-    return HttpResponse("Dijatal Pano sayfasına bakıyorsunuz")
-
-"""
+class ZilDataListView(SingleTableView):
+    model = ZilData
+    table_class = ZilayarTable
+    template_name = 'ozildata/zilayardata.html'
 
 
 def post_detail(request, pk):
     post = get_object_or_404(ZilData, pk=pk)
-    return render(request, 'ozildata/index.html', {'post': post})
-
-
-# post_detail.html
+    return render(request, 'ozildata/zilayardata.html', {'table': post})
 
 
 def post_new(request):
@@ -46,5 +34,4 @@ def post_new(request):
             return redirect('post_detail', pk=post.pk)
     else:
         form = ZilDataForm()
-
     return render(request, 'ozildata/post_edit.html', {'form': form})

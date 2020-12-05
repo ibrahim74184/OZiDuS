@@ -1,20 +1,14 @@
 {% extends 'ozildata/base.html' %}
 
-{% block content %}
-<div class="card" style="width: 20rem;">
-    <div class="card-header">
-        Okul Zili Ayarlı Günler
-    </div>
-        <div class="page-header">
-            <a href="{% url 'post_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
-            <h1><a href="/">Okul Zili Ayarlı Günler</a></h1>
-        </div>
-
-    <ul class="list-group list-group-flush">
-        {% for evenNumber in evenNumberList %}
-            <li class="list-group-item">{{evenNumber.published_date}} -- {{evenNumber.zilgun}}</li>
-        {% endfor %}
-    </ul>
-
-</div>
-{% endblock %}
+<!doctype html>
+<html>
+    <head>
+        <title>Zil Ayarları</title>
+    </head>
+    <body>
+        {% block content %}
+        <p></p>
+        <p>Merhaba Burası İndex </p>
+        {% endblock %}
+    </body>
+</html>
