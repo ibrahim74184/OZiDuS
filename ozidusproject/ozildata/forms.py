@@ -6,7 +6,5 @@ from .models import ZilData
 class ZilDataForm(forms.ModelForm):
     class Meta:
         model = ZilData
-        fields = ('toplanmasuresi', 'ogretmenzilsuresi', 'derssayisi', 'derssuresi',
-                  'tenefussuresi', 'oglenarasiders', 'zilgun', 'dersbaslangicsaati',
-                  'oglenarasisuresi', 'active')
+        fields = '__all__'
         exclude = ('published_date', 'id',)
