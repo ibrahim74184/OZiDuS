@@ -12,12 +12,12 @@ class ZilData(models.Model):
     tenefussuresi = models.TimeField(verbose_name='Tenefüs Süresi', default='00:10')
     oglenarasiders = models.SmallIntegerField(verbose_name='Öğlen Arası', default=6)
     oglenarasisuresi = models.TimeField(verbose_name='Öğlen Arası Süresi', default='00:45')
-    zilgun = models.SlugField(verbose_name='Gün No', default=0, unique=True)
+    zilgun = models.SlugField(verbose_name='Gün No', default=0)
     xzilgun = models.SmallIntegerField(verbose_name='Tanımlanan Günü', choices=[[0, 'Pazartesi'],
                                                                            [1, 'Salı'], [2, 'Çarşamba'],
                                                                            [3, 'Perşembe'], [4, 'Cuma'],
                                                                            [5, 'Cumartesi'],
-                                                                           [6, 'Pazar']], default=0)
+                                                                           [6, 'Pazar']], default=0, unique=True)
     active = models.BooleanField(verbose_name='Aktif Pasif', default=False)
     published_date = models.DateTimeField(verbose_name='Eklenme Tarihi', auto_now_add=True)
 

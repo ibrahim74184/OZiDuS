@@ -32,8 +32,12 @@ def post_new(request):
             post.author = request.user
             post.zilgun = post.xzilgun
             post.published_date = datetime.today()
-            post.save()
-            return redirect('zilayarlari', )
+            try:
+                post.save()
+            except IntegrityError:
+                Print("Aynı değer gitildi")
+            finally:
+                return redirect('zilayarlari', )
     else:
         form = ZilDataForm()
     return render(request, 'ozildata/post_edit.html', {'form': form})
