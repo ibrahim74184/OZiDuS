@@ -7,4 +7,5 @@ class ZilDataForm(forms.ModelForm):
     class Meta:
         model = ZilData
         fields = '__all__'
-        exclude = ('published_date', 'id',)
+        exclude = ('published_date', 'id', 'zilgun')
+        dersbaslangicsaati = forms.TimeField()

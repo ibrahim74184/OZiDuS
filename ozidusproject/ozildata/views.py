@@ -19,8 +19,9 @@ class ZilDataListView(SingleTableView):
 
 
 def post_detail(request, pk):
-    post = get_object_or_404(ZilData, pk=pk)
-    return render(request, 'ozildata/zilayardata.html', {'table': post})
+    table_class = ZilayarTable
+    table = get_object_or_404(table_class, pk=pk)
+    return render(request, 'zilayarlari', {'table': table})
 
 
 def post_new(request):
@@ -29,9 +30,10 @@ def post_new(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
+            post.zilgun = post.xzilgun
             post.published_date = datetime.today()
             post.save()
-            return redirect('post_detail', pk=post.pk)
+            return redirect('zilayarlari', )
     else:
         form = ZilDataForm()
     return render(request, 'ozildata/post_edit.html', {'form': form})
