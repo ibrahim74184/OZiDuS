@@ -7,6 +7,7 @@ pip install Django
 
  Proje de kullanılan her modul requirements.txt eklendi
  pip instal -r requirements.txt çalıştırın
+ 
  Django Dökümanlardan faydalarak
  Tablo görünümü için buradan faydalanıldı,
  https://django-tables2.readthedocs.io/en/latest/pages/tutorial.html
