@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import ZilData
 from .tables import ZilayarTable
 from .forms import ZilDataForm
+
 from datetime import datetime
 from django_tables2 import SingleTableView
 
@@ -18,13 +19,13 @@ class ZilDataListView(SingleTableView):
     template_name = 'ozildata/zilayardata.html'
 
 
-def post_detail(request, pk):
+def post_zildata_detail(request, pk):
     table_class = ZilayarTable
     table = get_object_or_404(table_class, pk=pk)
     return render(request, 'zilayarlari', {'table': table})
 
 
-def post_new(request):
+def post_zildata_new(request):
     if request.method == "POST":
         form = ZilDataForm(request.POST)
         if form.is_valid():
@@ -35,9 +36,9 @@ def post_new(request):
             try:
                 post.save()
             except IntegrityError:
-                Print("Aynı değer gitildi")
+                Print("Aynı değer gitirildi")
             finally:
                 return redirect('zilayarlari', )
     else:
         form = ZilDataForm()
-    return render(request, 'ozildata/post_edit.html', {'form': form})
+    return render(request, 'ozildata/post_zildata_edit.html', {'form': form})

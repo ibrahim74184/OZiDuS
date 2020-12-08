@@ -1,4 +1,6 @@
-{# ozildata/templates/ozildata/zilayardata.html #}
+<!--{# ozildata/templates/ozildata/zilayardata.html #}-->
+{% extends 'ozildata/base.html' %}
+{% block content %}
 {% load render_table from django_tables2 %}
 <!doctype html>
 <html>
@@ -10,3 +12,4 @@
         {% render_table table %}
     </body>
 </html>
+{% endblock %}

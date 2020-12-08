@@ -1,1 +1,2 @@
-from . defaultzildata import ZilData
+from .defaultzildata import ZilData
+
