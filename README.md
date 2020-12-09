@@ -62,7 +62,7 @@ Sadık BARAK, Şenol IRMAK, Barboros KIZILKOCA, Murat SAPMAZ, Nuri TIRAŞ, Ersin
 #### 3.	Gerçekleştirim Raporunun Tamamlanması
 Sadık BARAK, Şenol IRMAK, Barboros KIZILKOCA, Murat SAPMAZ, Nuri TIRAŞ, Ersin TORUNOĞLU, Özcan TOY, Ömer YAVUZ, İbrahim Talha YILMAZ, Leyla YILMAZ				
 #### 4.	Gantt Diagramı
-Serdar Asarkaya				
+Sadık BARAK, Şenol IRMAK, Barboros KIZILKOCA, Murat SAPMAZ, Nuri TIRAŞ, Ersin TORUNOĞLU, Özcan TOY, Ömer YAVUZ, İbrahim Talha YILMAZ, Leyla YILMAZ				
 #### 5.	Arayüz tasarımı
 Sadık BARAK, Şenol IRMAK, Barboros KIZILKOCA, Murat SAPMAZ, Nuri TIRAŞ, Ersin TORUNOĞLU, Özcan TOY, Ömer YAVUZ, İbrahim Talha YILMAZ, Leyla YILMAZ				
 #### 6.	Veri Tasarımı-Sınıf Tasarımı
