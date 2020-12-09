@@ -2,6 +2,7 @@ import sys, os, time, schedule, datetime, sqlite3
 from pygame import mixer
 from gtts import gTTS
 
+
 ZIL_AKTIF=True
 con = sqlite3.connect('zildata.sqlite3')
 cursorObj = con.cursor()
