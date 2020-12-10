@@ -25,8 +25,11 @@ def zilCal(mp3Yolu, anlikcalma=False):
             cursorObj.execute('SELECT yol FROM melodipath WHERE melodiad="'+zilturleri[zaman][:3]+'"')
             yol = cursorObj.fetchone()
             try:
-                if yol[0]==None: dosyamp3="melodi.mp3"
-                mixer.music.load(yol[0])
+                if yol[0]==None:
+                    dosyamp3="melodi.mp3"
+                else:
+                    dosyamp3=yol[0]
+                mixer.music.load(dosyamp3)
                 mixer.music.play()
             except:
                 print("MP3 dosyası bulunamadı!")       
