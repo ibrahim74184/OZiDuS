@@ -2,8 +2,6 @@ import sys, os, time, schedule, datetime, sqlite3
 from pygame import mixer
 from gtts import gTTS
 
-
-ZIL_AKTIF=True
 con = sqlite3.connect('zildata.sqlite3')
 cursorObj = con.cursor()
 mixer.init()
@@ -19,16 +17,15 @@ def zilCal(mp3Yolu, anlikcalma=False):
         cursorObj.execute('UPDATE cal_duyur SET mp3yolu=NULL')
         con.commit()
     else:
-        global ZIL_AKTIF
         cursorObj.execute('SELECT zilaktif FROM cal_duyur')
         zil = cursorObj.fetchone()
-        ZIL_AKTIF=bool(zil[0])
-        if ZIL_AKTIF:            
+        if bool(zil[0]):            
             simdi=datetime.datetime.now()
             zaman=simdi.strftime("%H:%M")
             cursorObj.execute('SELECT yol FROM melodipath WHERE melodiad="'+zilturleri[zaman][:3]+'"')
             yol = cursorObj.fetchone()
             try:
+                if yol[0]==None: dosyamp3="melodi.mp3"
                 mixer.music.load(yol[0])
                 mixer.music.play()
             except:
