@@ -1,0 +1,1 @@
+from .duyurudata import Duyurular
