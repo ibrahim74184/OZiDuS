@@ -31,9 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'home.apps.HomeConfig',
-    'ozildata.apps.OzildataConfig',
-    'ozilgiris.apps.OzilgirisConfig',
     'ozilanons.apps.OzilanonsConfig',
     'django_tables2',
     'django.contrib.admin',
@@ -59,7 +56,7 @@ ROOT_URLCONF = 'ozidusproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
