@@ -17,13 +17,13 @@ def index(request):
 class ZilDataListView(SingleTableView):
     model = ZilData
     table_class = ZilayarTable
-    template_name = 'zilayardata.html'
+    template_name = 'ayarlar/ayarlar.html'
 
 
 def post_zildata_detail(request, pk):
     table_class = ZilayarTable
     table = get_object_or_404(table_class, pk=pk)
-    return render(request, 'zilayarlari', {'table': table})
+    return render(request, 'ayarlar/ayarlar.html', {'table': table})
 
 
 def post_zildata_new(request):
@@ -39,7 +39,8 @@ def post_zildata_new(request):
             except IntegrityError:
                 Print("Aynı değer gitirildi")
             finally:
-                return redirect('zilayarlari', )
+                return redirect('index')
     else:
         form = ZilDataForm()
-    return render(request, 'post_zildata_edit.html', {'form': form})
+
+    return render(request, 'ayarlar/post_zildata_edit.html', {'form': form})

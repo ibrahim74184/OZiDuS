@@ -4,7 +4,7 @@ from ozilanons.views import ZilDataListView, index, post_zildata_new, post_zilda
 
 urlpatterns = [
     path('', index, name='index'),
-    path('ozildata/', ZilDataListView.as_view(), name='zilayarlari'),
+    path('ozildata/', ZilDataListView.as_view(), name='ayarlar'),
     path('ozildata/<int:pk>/', post_zildata_detail, name='post_detail'),
     path('new/', post_zildata_new, name='post_new'),
 

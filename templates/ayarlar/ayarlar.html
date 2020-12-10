@@ -1,9 +1,12 @@
+{% block content %}
+{% load render_table from django_tables2 %}
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OZiDuS</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <style>
         body {
             margin: 0;
@@ -102,61 +105,10 @@
         <h2>OZiDuS</h2>
         <span>Okul Zil ve Duyuru Sistemi</span>
     </diV>
-    <div class="menu">
-        <ul>
-            <li><a href="index.html">Canlı Yayın</a></li>
-            <li class="dropdown">  
-                <a href="javascript:void(0)" class="dropbtn">Zil Modülü</a>
-                <div class="dropdown-content">
-                    <a href="pazartesi.html">Pazartesi</a>
-                    <a href="#">Salı</a>
-                    <a href="#">Çarşamba</a>
-                    <a href="#">Perşembe</a>
-                    <a href="#">Cuma</a>
-                    <a href="#">Cumartesi</a>
-                    <a href="#">Pazar</a>
-                </div>
-            </li>
-            <li class="aktif"><a href="ayarlar.html">Ayarlar</a></li>
-        </ul>
-    </div>
-    <div class="main">
-        <form action="MP3_YUKLEME" method="post" enctype="multipart/form-data">
-            <input type="file" name="dosya_yukle" id="dosya_yukle">
-            <input type="submit" value="MP3 Yükle" name="submit">
-        </form> 
-        <hr style="width: 50%;">
-        <form action="CALMA_SCRIPT">
-            <label for="sesler">Öğrenci Girişi: </label>
-            <select id="sesler" name="sesler">
-                <option value="dosya_1">dosya_1</option>
-                <option value="dosya_2">dosya_2</option>
-                <option value="dosya_3">dosya_3</option>
-                <option value="dosya_4">dosya_4</option>
-            </select>
-            <input type="submit" value="Ayarla">
-        </form>
-        <form action="CALMA_SCRIPT">
-            <label for="sesler">Öğretmen Girişi: </label>
-            <select id="sesler" name="sesler">
-                <option value="dosya_1">dosya_1</option>
-                <option value="dosya_2">dosya_2</option>
-                <option value="dosya_3">dosya_3</option>
-                <option value="dosya_4">dosya_4</option>
-            </select>
-            <input type="submit" value="Ayarla">
-        </form>
-        <form action="CALMA_SCRIPT">
-            <label for="sesler">Ders Çıkışı: </label>
-            <select id="sesler" name="sesler">
-                <option value="dosya_1">dosya_1</option>
-                <option value="dosya_2">dosya_2</option>
-                <option value="dosya_3">dosya_3</option>
-                <option value="dosya_4">dosya_4</option>
-            </select>
-            <input type="submit" value="Ayarla">
-        </form>
 
-    </div>
+
+        {% render_table table %}
+
 </body>
 </html>
+{% endblock %}
