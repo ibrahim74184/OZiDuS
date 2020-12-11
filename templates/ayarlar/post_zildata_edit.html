@@ -1,24 +1,20 @@
-{% extends 'ozilanons/base.html' %}
-{% block content %}
+{% extends 'layout/base.html' %}
 
-    <head>
-        <title>Zil Ayarlar</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-    </head>
-    <body>
-        <form method="POST" class="post-form">
-            {% csrf_token %}
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title">AYARLAR- Geçerli Günün Zil Ayarları</h3>
-                </div>
-                <div class="panel-body">
-                    {{ form.as_p }}
-                    <button type="submit" class="save btn btn-default">Kaydet</button>
-                </div>
-            </div>
-        </form>
-    </body>
-
-
+{% block title %}
+Günün Zil Ayarları
 {% endblock %}
+
+{% block top %}
+Okulun Zil Zaman Ayar Formu
+{% endblock%}
+
+{% block content %}
+<body>
+<form method="POST" class="post-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-primary btn-lg" type="submit" >Kaydet</button>
+</form>
+</body>
+{% endblock %}
+

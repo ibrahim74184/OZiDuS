@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from ozilanons.models import ZilData
 from ozilanons.tables import ZilayarTable
-from ozilanons.forms import ZilDataForm
+from ozilanons.forms import ZilDataForm, DuyuruDataForm
 
 from datetime import datetime
 from django_tables2 import SingleTableView
@@ -11,7 +11,7 @@ from django_tables2 import SingleTableView
 # Create your views here.
 
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'ayarlar/index.html')
 
 
 class ZilDataListView(SingleTableView):
@@ -44,3 +44,21 @@ def post_zildata_new(request):
         form = ZilDataForm()
 
     return render(request, 'ayarlar/post_zildata_edit.html', {'form': form})
+
+
+def post_anons_new(request):
+    if request.method == "POST":
+        form = DuyuruDataForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            try:
+                post.save()
+            except IntegrityError:
+                Print("Aynı değer gitirildi")
+            finally:
+                return redirect('index')
+    else:
+        form = DuyuruDataForm()
+
+    return render(request, 'ayarlar/post_duyuru_edit.html', {'form': form})

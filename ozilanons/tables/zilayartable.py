@@ -9,7 +9,7 @@ class ZilayarTable(tables.Table):
 
         sequence = ('dersbaslangicsaati', 'toplanmasuresi',
                     'ogretmenzilsuresi', 'derssayisi', 'derssuresi', 'tenefussuresi',
-                    'oglenarasiders', 'oglenarasisuresi', 'zilgun', 'active',)
+                    'oglenarasiders', 'oglenarasisuresi', 'xzilgun', 'active',)
 
-        exclude = ('published_date', 'id',)
+        exclude = ('published_date', 'id', 'zilgun',)
         order_by = 'zilgun'
