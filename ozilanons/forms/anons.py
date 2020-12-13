@@ -1,9 +1,9 @@
 from django import forms
-from ozilanons.models import Duyurular
+from ozilanons.models import DuyuruData
 
 
 class DuyuruDataForm(forms.ModelForm):
     class Meta:
-        model = Duyurular
+        model = DuyuruData
         fields = '__all__'
         exclude = ('duyurutarihi', 'id')

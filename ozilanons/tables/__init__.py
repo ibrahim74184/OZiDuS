@@ -1,1 +1,1 @@
-from .zilayartable import ZilayarTable
+from .zilayartable import ZilayarTable, AksamZilayarTable

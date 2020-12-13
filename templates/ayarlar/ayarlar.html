@@ -5,7 +5,14 @@ Zil Özelleştirme
 {% endblock %}
 
 {% block top %}
-Kayıtlı Okul Zil Ayarları
+
+{% if request.resolver_match.url_name == 'ozilaksamdata' %}
+   <h4>Kayıtlı Akşam Okul Zil Ayarları</h4>
+{% endif %}
+{% if request.resolver_match.url_name == 'ozildata' %}
+    <h4>Kayıtlı Okul Zil Ayarları</h4>
+{% endif %}
+
 {% endblock%}
 
 {% block content %}

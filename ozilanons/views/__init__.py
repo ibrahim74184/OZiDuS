@@ -1,1 +1,2 @@
-from .okulzil import index, ZilDataListView, post_zildata_detail, post_zildata_new, post_anons_new
+from .okulzil import index, ZilDataListView, AksamZilDataListView, \
+    post_aksamzildata_new, post_zildata_new, login_zil, zilayarmenu

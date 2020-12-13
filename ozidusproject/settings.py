@@ -126,4 +126,4 @@ STATICFILES_DIRS = [
 
 ]
 
-LOGIN_REDIRECT_URL = 'ozildata'
+LOGIN_REDIRECT_URL = 'index'

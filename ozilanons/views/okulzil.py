@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
-from ozilanons.models import ZilData
-from ozilanons.tables import ZilayarTable
-from ozilanons.forms import ZilDataForm, DuyuruDataForm
-
+from ozilanons.models import ZilData, OkulAksamZaman
+from ozilanons.tables import ZilayarTable, AksamZilayarTable
+from ozilanons.forms import ZilDataForm, AksamZilDataForm
 from datetime import datetime
 from django_tables2 import SingleTableView
 
@@ -14,16 +13,24 @@ def index(request):
     return render(request, 'ayarlar/index.html')
 
 
+def zilayarmenu(request):
+    return render(request, 'ayarlar/zilayarmenu.html')
+
+
+def login_zil(request):
+    return render(request, 'registration/login.html')
+
+
 class ZilDataListView(SingleTableView):
     model = ZilData
     table_class = ZilayarTable
     template_name = 'ayarlar/ayarlar.html'
 
 
-def post_zildata_detail(request, pk):
-    table_class = ZilayarTable
-    table = get_object_or_404(table_class, pk=pk)
-    return render(request, 'ayarlar/ayarlar.html', {'table': table})
+class AksamZilDataListView(SingleTableView):
+    model = OkulAksamZaman
+    table_class = AksamZilayarTable
+    template_name = 'ayarlar/ayarlar.html'
 
 
 def post_zildata_new(request):
@@ -46,12 +53,14 @@ def post_zildata_new(request):
     return render(request, 'ayarlar/post_zildata_edit.html', {'form': form})
 
 
-def post_anons_new(request):
+def post_aksamzildata_new(request):
     if request.method == "POST":
-        form = DuyuruDataForm(request.POST)
+        form = AksamZilDataForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
+            post.zilgun = post.xzilgun
+            post.published_date = datetime.today()
             try:
                 post.save()
             except IntegrityError:
@@ -59,6 +68,24 @@ def post_anons_new(request):
             finally:
                 return redirect('index')
     else:
-        form = DuyuruDataForm()
+        form = AksamZilDataForm()
 
-    return render(request, 'ayarlar/post_duyuru_edit.html', {'form': form})
+    return render(request, 'ayarlar/post_zildata_edit.html', {'form': form})
+
+
+"""class OkulZamanDetail(SingleObjectMixin, ListView):
+    paginate_by = 2
+    template_name = "ayarlar/okulzaman_detail.html"
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object(queryset=ZilData.objects.all())
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['okulzilzaman'] = self.object
+        return context
+
+    def get_queryset(self):
+        return self.object.zildata_set.all()
+"""

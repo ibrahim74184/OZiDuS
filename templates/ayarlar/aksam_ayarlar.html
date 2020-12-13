@@ -1,0 +1,14 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}
+Zil Özelleştirme
+{% endblock %}
+
+{% block top %}
+Kayıtlı Akşam Okul Zil Ayarları
+{% endblock%}
+
+{% block content %}
+{% load render_table from django_tables2 %}
+{% render_table table %}
+{% endblock %}

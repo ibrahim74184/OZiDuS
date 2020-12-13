@@ -1,2 +1,2 @@
 from .anons import DuyuruDataForm
-from .zildataform import ZilDataForm
+from .zildataform import ZilDataForm, AksamZilDataForm

@@ -26,7 +26,7 @@ def zilCal(mp3Yolu, anlikcalma=False):
             yol = cursorObj.fetchone()
             try:
                 if yol[0]==None:
-                    dosyamp3="melodi.mp3"
+                    dosyamp3="ogrecizili.mp3"
                 else:
                     dosyamp3=yol[0]
                 mixer.music.load(dosyamp3)
@@ -61,7 +61,7 @@ def gunlukZilleriKur():
 
     for s in saatler:
         if s!=None and s!=int(gun):
-            schedule.every().day.at(s).do(lambda: zilCal('melodi.mp3'))
+            schedule.every().day.at(s).do(lambda: zilCal('ogrecizili.mp3'))
 
     schedule.every().day.at("22:00").do(lambda: kapat())
 
