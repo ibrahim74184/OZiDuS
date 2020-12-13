@@ -5,7 +5,7 @@ from ozilanons.tables import ZilayarTable, AksamZilayarTable
 from ozilanons.forms import ZilDataForm, AksamZilDataForm
 from datetime import datetime
 from django_tables2 import SingleTableView
-
+from scripts.oziliuret import Zuret
 
 # Create your views here.
 
@@ -14,6 +14,8 @@ def index(request):
 
 
 def zilayarmenu(request):
+
+    print(Zuret.uret())
     return render(request, 'ayarlar/zilayarmenu.html')
 
 

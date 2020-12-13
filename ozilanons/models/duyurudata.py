@@ -12,8 +12,8 @@ def mp3_path():
     return MP3FILES_FOLDER
 
 class DuyuruData(models.Model):
-    metin = models.CharField(verbose_name='Duyuru Metni',max_length=200)
-    mp3yolu = models.FilePathField(path=mp3_path, recursive=False, verbose_name='Melodi Yolu')
+    metin = models.CharField(verbose_name='Duyuru Metni',max_length=200, null=True)
+    mp3yolu = models.FilePathField(path=mp3_path, recursive=False, verbose_name='Melodi Yolu', null=True)
     guncellendi = models.BooleanField(verbose_name='Zil Güncel', default=False)
     zilaktif = models.BooleanField(verbose_name='Zil Aktif', default=True)
 

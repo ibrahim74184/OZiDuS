@@ -1,8 +1,8 @@
 import os, sys
 
-proj_path = "User/Samsung/Desktop/PythonProjeler/OZiDuS"
+proj_path = "/Users/Samsung/Desktop/PythonProjeler/OZiDuS"
 # This is so Django knows where to find stuff.
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ozilanons.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ozidusproject.settings")
 sys.path.append(proj_path)
 
 # This is so my local_settings.py gets loaded.
@@ -12,13 +12,13 @@ os.chdir(proj_path)
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
 
-from ozildata.models import ZilData
+from ozilanons.models import ZilData
 
 
-def uret():
-    gziller = ZilData.objects.all.filter(active=True)
-    for i in range(len(gziller)):
-        for x, y in gziller[i].items():
-            print(f"{x}, {y}")
-
-uret()
+class Zuret:
+    def uret():
+        gziller = ZilData.objects.all()
+        gunler = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar']
+        for x in gziller:
+            sd = gunler[int(x.zilgun)]
+            print(sd)
