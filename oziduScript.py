@@ -49,11 +49,13 @@ def duyuruYap(metin):
         cursorObj.execute('UPDATE cal_duyur SET metin=NULL')
         con.commit()
 
+
 def gunlukZilleriKur():
     global zilturleri
     t=datetime.datetime.now()
     gun=t.strftime("%w")
-    if gun==0:gun=7
+    if gun==0:
+        gun=7
 
     cursorObj.execute('SELECT * FROM saat WHERE gun_id='+gun)
     saatler = cursorObj.fetchone()
