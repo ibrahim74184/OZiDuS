@@ -49,7 +49,6 @@ def duyuruYap(metin):
         cursorObj.execute('UPDATE cal_duyur SET metin=NULL')
         con.commit()
 
-
 def gunlukZilleriKur():
     global zilturleri
     t=datetime.datetime.now()
