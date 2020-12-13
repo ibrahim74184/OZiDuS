@@ -39,9 +39,9 @@ def duyuruYap(metin):
     try:        
         tts = gTTS(metin, lang="tr")
         tts.save("duyuru.mp3")        
-        mixer.music.load(mp3Yolu)
+        mixer.music.load(duyuru.mp3)
         mixer.music.play()
-        time.sleep(10)
+        time.sleep(0.5)
         os.remove("duyuru.mp3")
     except:
         print("Google API'si devre dışı")
@@ -58,11 +58,11 @@ def gunlukZilleriKur():
 
     cursorObj.execute('SELECT * FROM saat WHERE gun_id='+gun)
     saatler = cursorObj.fetchone()
-    zilturleri=dict(zip(list(saatler), [d[0] for d in cursorObj.description]))
-
-    for s in saatler:
-        if s!=None and s!=int(gun):
-            schedule.every().day.at(s).do(lambda: zilCal('ogrecizili.mp3'))
+    if saatler!=None:
+        zilturleri=dict(zip(list(saatler), [d[0] for d in cursorObj.description]))
+        for s in saatler:
+            if s!=None and s!=int(gun):
+                schedule.every().day.at(s).do(lambda: zilCal('ogrecizili.mp3'))
 
     schedule.every().day.at("22:00").do(lambda: kapat())
 
