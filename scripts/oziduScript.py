@@ -4,13 +4,13 @@ from gtts import gTTS
 
 con = sqlite3.connect('zildata.sqlite3')
 cursorObj = con.cursor()
-mixer.init()
 
 def zilCal(mp3Yolu, anlikcalma=False):
     global zilturleri
     if anlikcalma:
         try:
-            mixer.music.load(yol[0])
+            mixer.init()
+            mixer.music.load("../mp3file/"+yol[0])
             mixer.music.play()
         except:
             print("MP3 dosyası bulunamadı!")       
@@ -29,7 +29,8 @@ def zilCal(mp3Yolu, anlikcalma=False):
                     dosyamp3="ogrecizili.mp3"
                 else:
                     dosyamp3=yol[0]
-                mixer.music.load(dosyamp3)
+                mixer.init()
+                mixer.music.load("../mp3file/"+dosyamp3)
                 mixer.music.play()
             except:
                 print("MP3 dosyası bulunamadı!")       
@@ -38,10 +39,14 @@ def zilCal(mp3Yolu, anlikcalma=False):
 def duyuruYap(metin):
     try:        
         tts = gTTS(metin, lang="tr")
-        tts.save("duyuru.mp3")        
-        mixer.music.load(duyuru.mp3)
+        tts.save("duyuru.mp3")       
+        mixer.init()
+        mixer.music.load("duyuru.mp3")
         mixer.music.play()
-        time.sleep(0.5)
+        while mixer.music.get_busy(): 
+            time.Clock().tick(10)
+        mixer.music.stop()
+        mixer.quit()
         os.remove("duyuru.mp3")
     except:
         print("Google API'si devre dışı")
