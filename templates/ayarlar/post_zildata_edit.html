@@ -5,22 +5,15 @@ Günün Zil Ayarları
 {% endblock %}
 
 {% block top %}
-<li>
-    <a class="nav-item" href="{% url 'okul_new' %}" >Okul Zil Ayarları..<span class="sr-only">(current)</span></a>
-</li>
-<li>
-    <a class="nav-item" href="{% url 'aksam_new' %}" >Akşam Okulu Zil Ayarları..<span class="sr-only">(current)</span></a>
-</li>
-
+{% if request.resolver_match.url_name == 'aksam_new' %}
+   <h4>Kayıtlı Akşam Okul Zil Girişi</h4>
+{% endif %}
+{% if request.resolver_match.url_name == 'okul_new' %}
+    <h4>Kayıtlı Okul Zil Girişi</h4>
+{% endif %}
 {% endblock%}
 
 {% block content %}
-{% if request.resolver_match.url_name == 'aksam_new' %}
-   <h4>Kayıtlı Akşam Okul Zil Ayarları</h4>
-{% endif %}
-{% if request.resolver_match.url_name == 'okul_new' %}
-    <h4>Kayıtlı Okul Zil Ayarları</h4>
-{% endif %}
 
 <body>
 <form method="POST" class="post-form">

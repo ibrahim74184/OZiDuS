@@ -1,22 +1,22 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-  <a class="navbar-brand" href="#">Okul Zil Duyuru Sistemi</a>
+  <a class="navbar-brand" href="{% url 'anonsduyuru' %}">Okul Zil Duyuru Sistemi</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item {% if request.resolver_match.url_name == 'zilayarmenu' %} active {% endif %} disabled">
+      <li class="nav-item {% if request.resolver_match.url_name == 'zilayarmenu' and user.is_authenticated %} active {% endif %} disabled">
         <a class="nav-link" href="{% url 'zilayarmenu' %}">Zil Giriş <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Duyuru</a>
+        <a class="nav-link disabled" href="#">Duyuru</a>
       </li>
       <li class="nav-item">
         <a class="nav-link disabled" href="{% url 'zilayarmenu' %}" tabindex="-1" aria-disabled="true">Müzik Yayın</a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Ayarlar</a>
+        <a class="nav-link dropdown-toggle disabled" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Ayarlar</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
           <a class="dropdown-item" href="#">Okul Zil Girişi</a>
           <a class="dropdown-item" href="#">Another action</a>

@@ -126,4 +126,4 @@ STATICFILES_DIRS = [
 
 ]
 
-LOGIN_REDIRECT_URL = 'index'
+LOGIN_REDIRECT_URL = 'anonsduyuru'

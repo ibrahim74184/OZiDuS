@@ -6,6 +6,7 @@ from ozilanons.forms import ZilDataForm, AksamZilDataForm
 from datetime import datetime
 from django_tables2 import SingleTableView
 from scripts.oziliuret import Zuret
+from django.views import generic
 
 # Create your views here.
 
@@ -13,8 +14,11 @@ def index(request):
     return render(request, 'ayarlar/index.html')
 
 
-def zilayarmenu(request):
+def anonsduyuru(request):
+    return render(request, 'ayarlar/anonsduyuru.html')
 
+
+def zilayarmenu(request):
     print(Zuret.uret())
     return render(request, 'ayarlar/zilayarmenu.html')
 
@@ -26,13 +30,19 @@ def login_zil(request):
 class ZilDataListView(SingleTableView):
     model = ZilData
     table_class = ZilayarTable
-    template_name = 'ayarlar/ayarlar.html'
+    template_name = 'ayarlar/ayarlar_detail.html'
+    #context_table_name = 'table'
+    tables = [ZilData.objects.all(), ]
+
+    table_pagination = {
+        "per_page": 10
+    }
 
 
 class AksamZilDataListView(SingleTableView):
     model = OkulAksamZaman
     table_class = AksamZilayarTable
-    template_name = 'ayarlar/ayarlar.html'
+    template_name = 'ayarlar/ayarlar_detail.html'
 
 
 def post_zildata_new(request):
@@ -41,7 +51,6 @@ def post_zildata_new(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
-            post.zilgun = post.xzilgun
             post.published_date = datetime.today()
             try:
                 post.save()
@@ -61,7 +70,6 @@ def post_aksamzildata_new(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
-            post.zilgun = post.xzilgun
             post.published_date = datetime.today()
             try:
                 post.save()
@@ -74,20 +82,3 @@ def post_aksamzildata_new(request):
 
     return render(request, 'ayarlar/post_zildata_edit.html', {'form': form})
 
-
-"""class OkulZamanDetail(SingleObjectMixin, ListView):
-    paginate_by = 2
-    template_name = "ayarlar/okulzaman_detail.html"
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object(queryset=ZilData.objects.all())
-        return super().get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['okulzilzaman'] = self.object
-        return context
-
-    def get_queryset(self):
-        return self.object.zildata_set.all()
-"""
