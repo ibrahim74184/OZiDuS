@@ -1,0 +1,18 @@
+{% extends 'layout/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block top %}
+{% endblock %}
+
+{% block content %}
+<h2>Yeni Kayıt</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form|crispy}}
+    <button type="submit" class="btn btn-danger">Yeni Kayıt</button>
+</form>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

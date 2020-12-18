@@ -1,11 +1,14 @@
 {% extends 'layout/base.html' %}
-
-{% block title %}
-Ana Sayfa
-{% endblock %}
+{% load crispy_forms_tags %}
 
 {% block top %}
-{% endblock%}
+<h2>Üye Giriş</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form|crispy}}
+    <button type="submit" class="btn btn-danger">Giriş</button>
+</form>
+{% endblock %}
 
 {% block content %}
 {% endblock %}

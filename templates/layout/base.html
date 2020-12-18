@@ -38,7 +38,15 @@
 </main>
 
 
-    {% include 'layout/footer.html' %}
+{% include 'layout/footer.html' %}
+<footer class="container">
+{% block footer %}
+
+{% endblock %}
+   <p>&copy; 497_29 Raspberry and Python 2020</p>
+</footer>
+
+
 <script src="{% static 'js/jquery-slim.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>

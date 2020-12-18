@@ -12,7 +12,6 @@ class OkulZaman(models.Model):
     tenefussuresi = models.TimeField(verbose_name='Tenefüs Süresi', default='00:10')
     oglenarasiders = models.SmallIntegerField(verbose_name='Öğlen Arası', default=6)
     oglenarasisuresi = models.TimeField(verbose_name='Öğlen Arası Süresi', default='00:45')
-    """zilgun = models.SlugField(verbose_name='Gün No', default=0)"""
     zilgun = models.SmallIntegerField(verbose_name='Tanımlanan Günü', choices=[[0, 'Pazartesi'],
                                                                                 [1, 'Salı'], [2, 'Çarşamba'],
                                                                                 [3, 'Perşembe'], [4, 'Cuma'],
@@ -21,18 +20,18 @@ class OkulZaman(models.Model):
     active = models.BooleanField(verbose_name='Aktif Pasif', default=False)
     published_date = models.DateTimeField(verbose_name='Eklenme Tarihi', auto_now_add=True)
 
-    def __str__(self):
-        return self.zilgun
-
     class Meta:
         abstract = True
+
 
 
 class ZilData(OkulZaman):
     class Meta:
         db_table = 'zildefault'
+        ordering = ['zilgun']
 
 
 class OkulAksamZaman(OkulZaman):
     class Meta:
         db_table = 'zilaksam'
+        ordering = ['zilgun']

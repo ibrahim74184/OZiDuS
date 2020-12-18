@@ -21,6 +21,7 @@ from django.contrib.auth import views
 
 urlpatterns = [
     path('', include('ozilanons.urls')),
+    path('', include('home.urls')),
     path('admin/', admin.site.urls),
     path('accounts/',include('django.contrib.auth.urls')),
 ]

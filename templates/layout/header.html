@@ -1,19 +1,19 @@
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-  <a class="navbar-brand" href="{% url 'anonsduyuru' %}">Okul Zil Duyuru Sistemi</a>
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark ">
+  <a class="navbar-brand" href="#">Okul Zil Duyuru Sistemi</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+  <div class="collapse navbar-collapse " id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item {% if request.resolver_match.url_name == 'zilayarmenu' and user.is_authenticated %} active {% endif %} disabled">
-        <a class="nav-link" href="{% url 'zilayarmenu' %}">Zil Giriş <span class="sr-only">(current)</span></a>
+      <li class="nav-item {% if request.resolver_match.url_name == 'zilayarmenu' and user.is_authenticated %}active{% endif %}disabled">
+        <a class="nav-link {% if user.is_authenticated %}active{% endif %}disabled" href="{% url 'zilayarmenu' %}">Zil Giriş <span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Duyuru</a>
+      <li class="nav-item {% if request.resolver_match.url_name == 'anonsduyuru' and user.is_authenticated %}active{% endif %}disabled" >
+        <a class="nav-link {% if user.is_authenticated %}active{% endif %}disabled" href="{% url 'anonsduyuru' %}" tabindex="-1" aria-disabled="true">Duyuru<span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="{% url 'zilayarmenu' %}" tabindex="-1" aria-disabled="true">Müzik Yayın</a>
+      <li class="nav-item ">
+        <a class="nav-link disabled" href="#">Müzik Yayın</a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle disabled" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Ayarlar</a>
@@ -25,9 +25,9 @@
       </li>
     </ul>
     {% if user.is_authenticated %}
-    <p class="navbar-brand">Welcome, {{ user.username }}</p>
+    <p class="navbar-brand">Hoşgeldin, {{ user.username }}</p>
     {% else %}
-    <p class="navbar-brand">Welcome, new user. Please log in.</p>
+    <p class="navbar-brand">Hoşgeldin,  Lütfen giriş yapın.</p>
     {% endif %}
   </div>
 </nav>

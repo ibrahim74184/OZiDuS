@@ -5,7 +5,7 @@ from ozilanons.tables import ZilayarTable, AksamZilayarTable
 from ozilanons.forms import ZilDataForm, AksamZilDataForm
 from datetime import datetime
 from django_tables2 import SingleTableView
-from scripts.oziliuret import Zuret
+#from scripts.oziliuret import Zuret
 from django.views import generic
 
 # Create your views here.
@@ -19,7 +19,7 @@ def anonsduyuru(request):
 
 
 def zilayarmenu(request):
-    print(Zuret.uret())
+    #print(Zuret.uret())
     return render(request, 'ayarlar/zilayarmenu.html')
 
 
@@ -57,7 +57,7 @@ def post_zildata_new(request):
             except IntegrityError:
                 Print("Aynı değer gitirildi")
             finally:
-                return redirect('index')
+                return redirect('zilayarmenu')
     else:
         form = ZilDataForm()
 
@@ -82,3 +82,31 @@ def post_aksamzildata_new(request):
 
     return render(request, 'ayarlar/post_zildata_edit.html', {'form': form})
 
+def yeni(request):
+    form = IcerikForm(request.POST or None)
+    if form.is_valid():
+        icerik = form.save(commit=False)
+        icerik.user = request.user
+        icerik.save()
+        messages.success(request, "İçerik eklendi")
+        return redirect("icerik:index")
+    return render(request, "yeni.html", {"form": form})
+
+
+def icerikSil(request, id):
+    icerik = get_object_or_404(IcerikModel, id=id)
+    icerik.delete()
+    messages.success(request, 'İçerik silindi')
+    return redirect("icerik:index")
+
+
+def guncelle(request, id):
+    icerik = get_object_or_404(IcerikModel, id=id)
+    form = IcerikForm(request.POST or None, request.FILES or None, instance=icerik)
+    if form.is_valid():
+        icerik = form.save(commit=False)
+        icerik.user = request.user
+        icerik.save()
+        messages.success(request, "İçerik Güncellendi")
+        return redirect("icerik:index")
+    return render(request, "gnc.html", {"form": form})
