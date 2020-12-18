@@ -1,12 +1,16 @@
 import os, sys
+from pathlib import Path
 
-proj_path = "/Users/Samsung/Desktop/PythonProjeler/OZiDuS"
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = str(BASE_DIR)[2:].replace("\\", '/')
+
 # This is so Django knows where to find stuff.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ozidusproject.settings")
-sys.path.append(proj_path)
+sys.path.append(BASE_DIR)
 
 # This is so my local_settings.py gets loaded.
-os.chdir(proj_path)
+os.chdir(BASE_DIR)
 
 # This is so models get loaded.
 from django.core.wsgi import get_wsgi_application
