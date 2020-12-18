@@ -1,9 +1,16 @@
-import os, sys
+"""import os, sys
 from pathlib import Path
 
+
+if os.name=="posix":
+    BASE_DIR = Path(__file__).resolve().parent.parent
+elif os.name=="nt":
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    BASE_DIR = str(BASE_DIR)[2:].replace("\\", '/')
+else: print("Bulunamdı")
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-BASE_DIR = str(BASE_DIR)[2:].replace("\\", '/')
+
 
 # This is so Django knows where to find stuff.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ozidusproject.settings")
@@ -15,7 +22,7 @@ os.chdir(BASE_DIR)
 # This is so models get loaded.
 from django.core.wsgi import get_wsgi_application
 
-application = get_wsgi_application()
+application = get_wsgi_application()"""
 
 from ozilanons.models import ZilData
 from ozilanons.models import DersZamanlama

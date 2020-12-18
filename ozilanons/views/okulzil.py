@@ -5,7 +5,6 @@ from ozilanons.tables import ZilayarTable, AksamZilayarTable
 from ozilanons.forms import ZilDataForm, AksamZilDataForm
 from datetime import datetime
 from django_tables2 import SingleTableView
-#from scripts.oziliuret import Zuret
 from django.views import generic
 
 # Create your views here.
