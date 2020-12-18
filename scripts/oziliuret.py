@@ -19,8 +19,6 @@ application = get_wsgi_application()
 
 from ozilanons.models import ZilData
 from ozilanons.models import DersZamanlama
-from datetime import datetime, timedelta
-from math import fmod
 
 
 def gunun_zili(z, gun_id, pt_dersbaslangicsaati, pt_toplanmasuresi, pt_tenefussuresi, pt_ogretmenzilsuresi,
@@ -96,7 +94,7 @@ def uret():
                     if toplan is not None:
                         print(toplan)
                     print("{} : {}.Ders ilk {}:{} , ders {}:{} , çıkış {}:{} ".format(gunler[gun_id], z, ss, ilk,
-                                                                                  ss_ders, ders, ss_cik, cik))
+                                                                                      ss_ders, ders, ss_cik, cik))
 
             if x.zilgun in [5, 6]:
                 guncount += 1
