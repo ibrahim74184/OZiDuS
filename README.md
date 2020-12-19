@@ -1,10 +1,6 @@
 ozidusproject --- proje dizini
 diger her klasör bire modül
 
-OZidus dizini altında virtualenv oluşturun
-
-pip install Django
-
  Proje de kullanılan her modul requirements.txt eklendi
  
  pip instal -r requirements.txt çalıştırın
