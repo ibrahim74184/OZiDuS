@@ -1,10 +1,11 @@
 from django.urls import path
-from ozilanons.views import login_zil, AksamZilDataListView
+from ozilanons.views import login_zil, AksamZilDataListView, guncelle
 from ozilanons.views import ZilDataListView, index, post_zildata_new, post_aksamzildata_new, zilayarmenu, anonsduyuru
 
 urlpatterns = [
     path('', login_zil, name='login'),
     path('home/', index, name='index'),
+    path('home/<int:id>', guncelle, name='guncelle'),
     path('home/okul/', zilayarmenu, name='zilayarmenu'),
     path('home/okul/anonsduyuru', anonsduyuru, name='anonsduyuru'),
     path('home/okul/ozildata/', ZilDataListView.as_view(), name='ozildata'),

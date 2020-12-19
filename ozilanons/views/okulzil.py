@@ -5,7 +5,7 @@ from ozilanons.tables import ZilayarTable, AksamZilayarTable
 from ozilanons.forms import ZilDataForm, AksamZilDataForm
 from datetime import datetime
 from django_tables2 import SingleTableView
-from django.views import generic
+from django.contrib import messages
 
 # Create your views here.
 
@@ -14,8 +14,13 @@ def index(request):
 
 
 def anonsduyuru(request):
+
     return render(request, 'ayarlar/anonsduyuru.html')
 
+def cikis(request):
+    logout(request)
+    messages.success(request, "Çıkış yapıldı")
+    return redirect("ayarlar/index.html")
 
 def zilayarmenu(request):
     #print(Zuret.uret())
@@ -81,16 +86,6 @@ def post_aksamzildata_new(request):
 
     return render(request, 'ayarlar/post_zildata_edit.html', {'form': form})
 
-def yeni(request):
-    form = IcerikForm(request.POST or None)
-    if form.is_valid():
-        icerik = form.save(commit=False)
-        icerik.user = request.user
-        icerik.save()
-        messages.success(request, "İçerik eklendi")
-        return redirect("icerik:index")
-    return render(request, "yeni.html", {"form": form})
-
 
 def icerikSil(request, id):
     icerik = get_object_or_404(IcerikModel, id=id)
@@ -100,12 +95,12 @@ def icerikSil(request, id):
 
 
 def guncelle(request, id):
-    icerik = get_object_or_404(IcerikModel, id=id)
-    form = IcerikForm(request.POST or None, request.FILES or None, instance=icerik)
+    icerik = get_object_or_404(ZilData, id=id)
+    form = ZilDataForm(request.POST or None, request.FILES or None, instance=icerik)
     if form.is_valid():
         icerik = form.save(commit=False)
         icerik.user = request.user
         icerik.save()
-        messages.success(request, "İçerik Güncellendi")
-        return redirect("icerik:index")
-    return render(request, "gnc.html", {"form": form})
+        messages.success(request, 'İçerik Güncellendi')
+        return redirect('ozildata')
+    return render(request, 'ayarlar/post_zildata_edit.html', {'form': form})

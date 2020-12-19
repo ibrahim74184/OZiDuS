@@ -32,7 +32,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'ozilanons.apps.OzilanonsConfig',
-    'home.apps.HomeConfig',
     'django_tables2',
     'crispy_forms',
     'django_extensions',
