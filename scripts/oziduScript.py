@@ -2,7 +2,7 @@ import sys, os, time, schedule, datetime, sqlite3
 from pygame import mixer
 from gtts import gTTS
 
-con = sqlite3.connect('zildata.sqlite3')
+con = sqlite3.connect('../zildata.sqlite3')
 cursorObj = con.cursor()
 
 def zilCal(mp3Yolu, anlikcalma=False):
@@ -10,7 +10,7 @@ def zilCal(mp3Yolu, anlikcalma=False):
     if anlikcalma:
         try:
             mixer.init()
-            mixer.music.load("../mp3file/"+yol[0])
+            mixer.music.load("../mp3file/"+mp3Yolu)
             mixer.music.play()
         except:
             print("MP3 dosyası bulunamadı!")       
@@ -19,14 +19,14 @@ def zilCal(mp3Yolu, anlikcalma=False):
     else:
         cursorObj.execute('SELECT zilaktif FROM cal_duyur')
         zil = cursorObj.fetchone()
-        if bool(zil[0]):            
+        if bool(zil[4]):            
             simdi=datetime.datetime.now()
             zaman=simdi.strftime("%H:%M")
             cursorObj.execute('SELECT yol FROM melodipath WHERE melodiad="'+zilturleri[zaman][:3]+'"')
             yol = cursorObj.fetchone()
             try:
                 if yol[0]==None:
-                    dosyamp3="ogrecizili.mp3"
+                    dosyamp3="default.mp3"
                 else:
                     dosyamp3=yol[0]
                 mixer.init()
@@ -43,12 +43,12 @@ def duyuruYap(metin):
         mixer.init()
         mixer.music.load("duyuru.mp3")
         mixer.music.play()
-        while mixer.music.get_busy(): 
-            time.Clock().tick(10)
+        while mixer.music.get_busy():
+            time.sleep(0.1)
         mixer.music.stop()
         mixer.quit()
         os.remove("duyuru.mp3")
-    except:
+    except:  
         print("Google API'si devre dışı")
     finally:
         cursorObj.execute('UPDATE cal_duyur SET metin=NULL')
@@ -67,7 +67,7 @@ def gunlukZilleriKur():
         zilturleri=dict(zip(list(saatler), [d[0] for d in cursorObj.description]))
         for s in saatler:
             if s!=None and s!=int(gun):
-                schedule.every().day.at(s).do(lambda: zilCal('ogrecizili.mp3'))
+                schedule.every().day.at(s).do(lambda: zilCal('default.mp3'))
 
     schedule.every().day.at("22:00").do(lambda: kapat())
 
