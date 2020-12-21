@@ -24,7 +24,6 @@ class OkulZaman(models.Model):
         abstract = True
 
 
-
 class ZilData(OkulZaman):
     class Meta:
         db_table = 'zildefault'

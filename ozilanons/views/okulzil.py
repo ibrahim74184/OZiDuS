@@ -1,26 +1,29 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
-from ozilanons.models import ZilData, OkulAksamZaman
+from ozilanons.models import ZilData, OkulAksamZaman, DersZamanlama
 from ozilanons.tables import ZilayarTable, AksamZilayarTable
 from ozilanons.forms import ZilDataForm, AksamZilDataForm
 from datetime import datetime
 from django_tables2 import SingleTableView
 from django.contrib import messages
-
+from django.contrib.auth import login, authenticate, logout
+from scripts.oziliuret import ZilUret
 # Create your views here.
+
 
 def index(request):
     return render(request, 'ayarlar/index.html')
 
 
 def anonsduyuru(request):
-
     return render(request, 'ayarlar/anonsduyuru.html')
+
 
 def cikis(request):
     logout(request)
     messages.success(request, "Çıkış yapıldı")
-    return redirect("ayarlar/index.html")
+    return redirect('login')
+
 
 def zilayarmenu(request):
     #print(Zuret.uret())
@@ -28,6 +31,7 @@ def zilayarmenu(request):
 
 
 def login_zil(request):
+    messages.success(request, 'Giriş Yapıldı')
     return render(request, 'registration/login.html')
 
 
@@ -37,6 +41,9 @@ class ZilDataListView(SingleTableView):
     template_name = 'ayarlar/ayarlar_detail.html'
     #context_table_name = 'table'
     tables = [ZilData.objects.all(), ]
+    DersZamanlama.objects.all().delete()
+    data = ZilUret(ZilData, DersZamanlama)
+    data.uret()
 
     table_pagination = {
         "per_page": 10
@@ -104,3 +111,4 @@ def guncelle(request, id):
         messages.success(request, 'İçerik Güncellendi')
         return redirect('ozildata')
     return render(request, 'ayarlar/post_zildata_edit.html', {'form': form})
+

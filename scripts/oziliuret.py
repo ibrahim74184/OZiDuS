@@ -1,225 +1,201 @@
-"""import os, sys
-from pathlib import Path
-
-
-if os.name=="posix":
-    BASE_DIR = Path(__file__).resolve().parent.parent
-elif os.name=="nt":
-    BASE_DIR = Path(__file__).resolve().parent.parent
-    BASE_DIR = str(BASE_DIR)[2:].replace("\\", '/')
-else: print("Bulunamdı")
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-
-
-# This is so Django knows where to find stuff.
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ozidusproject.settings")
-sys.path.append(BASE_DIR)
-
-# This is so my local_settings.py gets loaded.
-os.chdir(BASE_DIR)
-
-# This is so models get loaded.
-from django.core.wsgi import get_wsgi_application
-
-application = get_wsgi_application()"""
 
 from ozilanons.models import ZilData
 from ozilanons.models import DersZamanlama
 from datetime import datetime, time, timedelta
 
-kontrol = {'toplangun': True, 'toplan': None, 'guncount': 0, 'osderssaati': None}
-gunler = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar']
-gundefault = list()
+
+class ZilUret:
+
+    def __init__(self, _ZilData, _DersZamanlama):
+
+        self.kontrol = {'toplangun': True, 'toplan': False, 'guncount': 0, 'osderssaati': '12:00:00'}
+        self.gunler = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar']
+        self.gziller = _ZilData.objects.all()
+        self.DersZamanlama = DersZamanlama
+        self.sabit_saniye = datetime.timestamp(datetime(2000, 1, 1, 0, 0, 0))
 
 
-def oglensonrasi(oglenarasisuresi, ossaat):
-    oss = oglenarasisuresi.hour
-    odd = oglenarasisuresi.minute
-    ss = ossaat.hour
-    dd = ossaat.minute
-    ss += ((dd + odd) // 60)
-    ss += oss
-    dd = (odd + dd) % 60
-    osdersaat = time(ss, dd, 0)
-    return osdersaat
+    def oglensonrasi(self,oglenarasisuresi, ossaat):
+        oglen_saniye = self.toplam_saniye(oglenarasisuresi)
+        osson_saniye = self.toplam_saniye(ossaat)
+        _sure = oglen_saniye + osson_saniye
+        _ders = datetime.fromtimestamp(_sure - 10800)
+        self.kontrol['osderssaati'] = str(_ders).split()[1]
+        return str(_ders).split()[1]
 
 
-def gunun_zili(z, gun_id, pt_dersbaslangicsaati, pt_toplanmasuresi, pt_tenefussuresi, pt_ogretmenzilsuresi,
-               pt_derssuresi):
-    if gun_id == 0 and kontrol.get('toplangun'):
-        kontrol['toplangun'] = False
-        toplan_sa = int(pt_dersbaslangicsaati.hour)
-        toplan_dk = int(pt_dersbaslangicsaati.minute) - pt_toplanmasuresi.minute
-        if toplan_dk < 0:
-            toplan_dk += 60
-            toplan_sa -= 1
-        kontrol['toplan'] = "Toplanma {}:{}:00".format(toplan_sa, toplan_dk)
-    else:
-        kontrol['toplan'] = None
-
-    ilk, ders, cik = derszilihesapla(z, pt_dersbaslangicsaati, pt_derssuresi, pt_tenefussuresi, pt_ogretmenzilsuresi)
-    return ilk, ders, cik
+    def toplanmazaman(self,okulbaslamazaman, toplanmasuresi):
+        toplan_saniye = self.toplam_saniye(okulbaslamazaman)
+        tsures_saniye = self.toplam_saniye(toplanmasuresi)
+        _sure = toplan_saniye - tsures_saniye
+        _ders = datetime.fromtimestamp(_sure - 10800)
+        return str(_ders).split()[1]
 
 
-def derszilihesapla(z, dersbsaati='09:00:00', derssuresi='00:30:00', tenefussuresi='00:10:00', ogretmenzil='00:03:00'):
-    ss_ilk = int(dersbsaati.hour)
-    ss_ders = int(dersbsaati.hour)
-    ss_cik = int(dersbsaati.hour)
-    dbm = dersbsaati.minute
-    dsm = derssuresi.minute
-    tsm = tenefussuresi.minute
-    osm = ogretmenzil.minute
+    def gunun_zili(self, z, gun_id, pt_dersbaslangicsaati, pt_toplanmasuresi, pt_tenefussuresi, pt_ogretmenzilsuresi,
+                   pt_derssuresi):
+        if self.kontrol.get('toplangun'):
+            toplanzil_saat = self.toplanmazaman(pt_dersbaslangicsaati, pt_toplanmasuresi)
+            self.kontrol['toplan'] = toplanzil_saat
+            print("Toplanma {}".format(toplanzil_saat))
 
-    ilk = ((dbm + (z - 1) * (dsm + tsm)) - osm)
-    ders = (dbm + (z - 1) * (dsm + tsm))
-    cik = dbm + z * dsm + (z - 1) * tsm
-    if ilk < 0:
-        ilk += 60
-        ss_ilk -= 1
+        ilk, ders, cik = self.derszilihesapla(z, pt_dersbaslangicsaati, pt_derssuresi, pt_tenefussuresi, pt_ogretmenzilsuresi)
 
-    ss_ilk += int(ilk) // 60
-    ss_ders += int(ders) // 60
-    ss_cik += int(cik) // 60
-
-    ilk %= 60
-    ders %= 60
-    cik %= 60
-    return time(ss_ilk, ilk, 0), time(ss_ders, ders, 0), time(ss_cik, cik, 0)
+        veri = self._DersZamanlama(
+            okul_turu="zil.okul_turu",
+            ders_gun=gun_id,
+            ders_no=z,
+            toplanma_saati='00:00:00',
+            ders_baslangic=ilk,
+            ogretmen_saat=ders,
+            ders_bitis=cik,
+            active=True,
+            published_date=datetime.now(),
+        )
+        veri.save()
+        return ilk, ders, cik
 
 
-def defaultgun():
-
-    gziller = ZilData.objects.all()
-    for x in gziller:
-        if x.active:
-            if (x.zilgun in [0, 1, 2, 3, 4]) and (x.zilgun not in [5, 6]):
-                gundefault.append(x.zilgun)
-
-    xy = set(gundefault).symmetric_difference(set([0, 1, 2, 3, 4]))
-    return xy
+    def toplam_saniye(self, sure):
+        saat, dakika, saniye = str(sure).split(':')
+        _tarih = datetime(2000, 1, 1, int(saat), int(dakika), 0)
+        saniye = datetime.timestamp(_tarih)
+        return saniye - self.sabit_saniye
 
 
-def uret():
-    gziller = ZilData.objects.all()
-    gundefault = list()
+    def donustur_saat(self, ilk_ts, ders_ts, cik_ts):
+        ilk_d = datetime.fromtimestamp(ilk_ts - 10800)
+        ders_d = datetime.fromtimestamp(ders_ts - 10800)
+        cik_d = datetime.fromtimestamp(cik_ts - 10800)
+        return str(ilk_d).split()[1], str(ders_d).split()[1], str(cik_d).split()[1]
 
-    all_fields = [f.name for f in DersZamanlama._meta.fields]
-    # print(all_fields)
 
-    for x in gziller:
-        if x.active:
-            if (x.zilgun in [0, 1, 2, 3, 4]) and (x.zilgun not in [5, 6]):
-                pt_toplanmasuresi = x.toplanmasuresi
-                pt_dersbaslangicsaati = x.dersbaslangicsaati
-                pt_ogretmenzilsuresi = x.ogretmenzilsuresi
-                pt_derssayisi = x.derssayisi
-                pt_derssuresi = x.derssuresi
-                pt_tenefussuresi = x.tenefussuresi
-                pt_oglenarasiders = x.oglenarasiders
-                pt_oglenarasisuresi = x.oglenarasisuresi
-                gundefault.append(x.zilgun)
-                gun_id = x.zilgun
-                if pt_oglenarasiders == 0 or pt_oglenarasiders is None:
-                    pt_oglenarasiders = pt_derssayisi
-                for z in range(1, pt_oglenarasiders + 1):
-                    ilk, ders, cik = gunun_zili(z, gun_id, pt_dersbaslangicsaati, pt_toplanmasuresi,
-                                                pt_tenefussuresi, pt_ogretmenzilsuresi, pt_derssuresi)
+    def derszilihesapla(self, z, dersbsaati='09:00:00', derssuresi='00:30:00', tenefussuresi='00:10:00', ogretmenzil='00:03:00'):
+        obast_saniye = self.toplam_saniye(dersbsaati)
+        suret_saniye = self.toplam_saniye(derssuresi)
+        tenft_saniye = self.toplam_saniye(tenefussuresi)
+        ogrtt_saniye = self.toplam_saniye(ogretmenzil)
 
-                    if kontrol.get('toplan') is not None:
-                        print(kontrol['toplan'])
+        ilk = ((obast_saniye + (z - 1) * (suret_saniye + tenft_saniye)) - ogrtt_saniye)
+        ders = (obast_saniye + (z - 1) * (suret_saniye + tenft_saniye))
+        cik = obast_saniye + z * suret_saniye + (z - 1) * tenft_saniye
 
-                    print("{} : {}.Ders ilk {} , ders {} , çıkış {} ".format(gunler[gun_id], z, ilk, ders, cik))
-                    if z == pt_oglenarasiders:
-                        kontrol['osderssaati'] = oglensonrasi(pt_oglenarasisuresi, cik)
+        _ilk, _ders, _cik = self.donustur_saat(ilk, ders, cik)
+        return _ilk, _ders, _cik
 
-                if kontrol.get('osderssaati') is not None:
-                    for z in range(pt_oglenarasiders + 1, pt_derssayisi + 1):
-                        ilk, ders, cik = gunun_zili(z - pt_oglenarasiders, gun_id, kontrol.get('osderssaati'),
-                                                    pt_toplanmasuresi,
-                                                    pt_tenefussuresi, pt_ogretmenzilsuresi, pt_derssuresi)
 
-                        if kontrol.get('toplan') is not None:
-                            print(kontrol['toplan'])
+    def defaultgunhi(self):
+        hitanimligun = list()
+        for x in self.gziller:
+            if x.active:
+                if (x.zilgun in [0, 1, 2, 3, 4]) and (x.zilgun not in [5, 6]):
+                    hitanimligun.append(x.zilgun)
 
-                        print("{} : {}.Ders ilk {} , ders {} , çıkış {} ".format(gunler[gun_id], z, ilk, ders, cik))
+        hitanimsizgun = set(hitanimligun).symmetric_difference(set([0, 1, 2, 3, 4]))
+        return hitanimsizgun
 
-                if x.zilgun == 0:
-                    for u in defaultgun():
-                        pt_dersbaslangicsaati = x.dersbaslangicsaati
-                        pt_toplanmasuresi = x.toplanmasuresi
-                        pt_ogretmenzilsuresi = x.ogretmenzilsuresi
-                        pt_derssayisi = x.derssayisi
-                        pt_derssuresi = x.derssuresi
-                        pt_tenefussuresi = x.tenefussuresi
-                        pt_oglenarasiders = x.oglenarasiders
-                        pt_oglenarasisuresi = x.oglenarasisuresi
-                        gun_id = u
-                        if pt_oglenarasiders == 0 or pt_oglenarasiders is None:
-                            pt_oglenarasiders = pt_derssayisi
+    def uret(self):
 
-                        for z in range(1, pt_oglenarasiders + 1):
-                            ilk, ders, cik = gunun_zili(z, gun_id, pt_dersbaslangicsaati, pt_toplanmasuresi,
-                                                        pt_tenefussuresi, pt_ogretmenzilsuresi, pt_derssuresi)
+        for x in self.gziller:
+            if x.active:
+                if (x.zilgun in [0, 1, 2, 3, 4]) and (x.zilgun not in [5, 6]):
+                    pt_toplanmasuresi = x.toplanmasuresi
+                    pt_dersbaslangicsaati = x.dersbaslangicsaati
+                    pt_ogretmenzilsuresi = x.ogretmenzilsuresi
+                    pt_derssayisi = x.derssayisi
+                    pt_derssuresi = x.derssuresi
+                    pt_tenefussuresi = x.tenefussuresi
+                    pt_oglenarasiders = x.oglenarasiders
+                    pt_oglenarasisuresi = x.oglenarasisuresi
+                    gun_id = x.zilgun
+                    self.kontrol['toplangun'] = True
+                    if pt_oglenarasiders == 0 or pt_oglenarasiders is None:
+                        pt_oglenarasiders = pt_derssayisi
 
-                            if kontrol.get('toplan') is not None:
-                                print(kontrol['toplan'])
+                    for z in range(1, pt_derssayisi + 1):
+                        if z > 1:
+                            self.kontrol['toplangun'] = False
+                        if z <= pt_oglenarasiders:
+                            ilk, ders, cik = self.gunun_zili(z, gun_id, pt_dersbaslangicsaati, pt_toplanmasuresi,
+                                                             pt_tenefussuresi, pt_ogretmenzilsuresi, pt_derssuresi)
+                            self.kontrol['osderssaati'] = self.oglensonrasi(pt_oglenarasisuresi, cik)
+                            print("{} : {}.Ders ilk {} , ders {} , çıkış {} ".format(self.gunler[gun_id], z, ilk, ders, cik))
 
-                            print("{} : {}.Ders ilk {} , ders {} , çıkış {} ".format(gunler[gun_id], z, ilk, ders, cik))
-                            if z == pt_oglenarasiders:
-                                kontrol['osderssaati'] = oglensonrasi(pt_oglenarasisuresi, cik)
+                        if z > pt_oglenarasiders:
+                            ilk, ders, cik = self.gunun_zili(z - pt_oglenarasiders, gun_id, self.kontrol.get('osderssaati'), pt_toplanmasuresi,
+                                                             pt_tenefussuresi, pt_ogretmenzilsuresi, pt_derssuresi)
+                            print("{} : {}.Ders ilk {} , ders {} , çıkış {} ".format(self.gunler[gun_id], z, ilk, ders,
+                                                                                     cik))
 
-                        if kontrol.get('osderssaati') is not None:
-                            for z in range(pt_oglenarasiders + 1, pt_derssayisi + 1):
-                                ilk, ders, cik = gunun_zili(z - pt_oglenarasiders, gun_id, kontrol.get('osderssaati'),
-                                                            pt_toplanmasuresi,
-                                                            pt_tenefussuresi, pt_ogretmenzilsuresi, pt_derssuresi)
+                    if x.zilgun == 0:
+                        for u in self.defaultgunhi():
+                            pt_dersbaslangicsaati = x.dersbaslangicsaati
+                            pt_toplanmasuresi = x.toplanmasuresi
+                            pt_ogretmenzilsuresi = x.ogretmenzilsuresi
+                            pt_derssayisi = x.derssayisi
+                            pt_derssuresi = x.derssuresi
+                            pt_tenefussuresi = x.tenefussuresi
+                            pt_oglenarasiders = x.oglenarasiders
+                            pt_oglenarasisuresi = x.oglenarasisuresi
+                            gun_id = u
+                            self.kontrol['toplangun'] = True
+                            if pt_oglenarasiders == 0 or pt_oglenarasiders is None:
+                                pt_oglenarasiders = pt_derssayisi
 
-                                if kontrol.get('toplan') is not None:
-                                    print(kontrol['toplan'])
+                            for z in range(1, pt_derssayisi + 1):
+                                if z > 1:
+                                    self.kontrol['toplangun'] = False
+                                if z <= pt_oglenarasiders:
+                                    ilk, ders, cik = self.gunun_zili(z, gun_id, pt_dersbaslangicsaati, pt_toplanmasuresi,
+                                                                     pt_tenefussuresi, pt_ogretmenzilsuresi, pt_derssuresi)
+                                    self.kontrol['osderssaati'] = self.oglensonrasi(pt_oglenarasisuresi, cik)
+                                    print("{} : {}.Ders ilk {} , ders {} , çıkış {} ".format(self.gunler[gun_id], z, ilk, ders,
+                                                                                             cik))
 
-                                print("{} : {}.Ders ilk {} , ders {} , çıkış {} ".format(gunler[gun_id], z, ilk, ders,
-                                                                                         cik))
+                                if z > pt_oglenarasiders:
+                                    ilk, ders, cik = self.gunun_zili(z - pt_oglenarasiders, gun_id, self.kontrol.get('osderssaati'),
+                                                                     pt_toplanmasuresi,
+                                                                     pt_tenefussuresi, pt_ogretmenzilsuresi, pt_derssuresi)
 
-            if x.zilgun in [5, 6]:
-                pt_dersbaslangicsaati = x.dersbaslangicsaati
-                pt_toplanmasuresi = x.toplanmasuresi
-                pt_ogretmenzilsuresi = x.ogretmenzilsuresi
-                pt_derssayisi = x.derssayisi
-                pt_derssuresi = x.derssuresi
-                pt_tenefussuresi = x.tenefussuresi
-                pt_oglenarasiders = x.oglenarasiders
-                pt_oglenarasisuresi = x.oglenarasisuresi
-                gun_id = x.zilgun
-                if pt_oglenarasiders == 0 or pt_oglenarasiders is None:
-                    pt_oglenarasiders = pt_derssayisi
-                for z in range(1, pt_oglenarasiders + 1):
-                    ilk, ders, cik = gunun_zili(z, gun_id, pt_dersbaslangicsaati, pt_toplanmasuresi,
-                                                pt_tenefussuresi, pt_ogretmenzilsuresi, pt_derssuresi)
+                                    print("{} : {}.Ders ilk {} , ders {} , çıkış {} ".format(self.gunler[gun_id], z, ilk, ders,
+                                                                                             cik))
 
-                    if kontrol.get('toplan') is not None:
-                        print(kontrol['toplan'])
+                if x.zilgun in [5, 6]:
+                    pt_dersbaslangicsaati = x.dersbaslangicsaati
+                    pt_toplanmasuresi = x.toplanmasuresi
+                    pt_ogretmenzilsuresi = x.ogretmenzilsuresi
+                    pt_derssayisi = x.derssayisi
+                    pt_derssuresi = x.derssuresi
+                    pt_tenefussuresi = x.tenefussuresi
+                    pt_oglenarasiders = x.oglenarasiders
+                    pt_oglenarasisuresi = x.oglenarasisuresi
+                    gun_id = x.zilgun
+                    self.kontrol['toplangun'] = True
+                    if pt_oglenarasiders == 0 or pt_oglenarasiders is None:
+                        pt_oglenarasiders = pt_derssayisi
 
-                    print("{} : {}.Ders ilk {} , ders {} , çıkış {} ".format(gunler[gun_id], z, ilk, ders, cik))
-                    if z == pt_oglenarasiders:
-                        kontrol['osderssaati'] = oglensonrasi(pt_oglenarasisuresi, cik)
+                    for z in range(1, pt_derssayisi + 1):
+                        if z > 1:
+                            self.kontrol['toplangun'] = False
+                        if z <= pt_oglenarasiders:
+                            ilk, ders, cik = self.gunun_zili(z, gun_id, pt_dersbaslangicsaati, pt_toplanmasuresi,
+                                                             pt_tenefussuresi, pt_ogretmenzilsuresi, pt_derssuresi)
+                            self.kontrol['osderssaati'] = self.oglensonrasi(pt_oglenarasisuresi, cik)
+                            print("{} : {}.Ders ilk {} , ders {} , çıkış {} ".format(self.gunler[gun_id], z, ilk, ders, cik))
+                        if z > pt_oglenarasiders:
+                            ilk, ders, cik = self.gunun_zili(z - pt_oglenarasiders, gun_id, self.kontrol.get('osderssaati'),
+                                                             pt_toplanmasuresi,
+                                                             pt_tenefussuresi, pt_ogretmenzilsuresi, pt_derssuresi)
 
-                if kontrol.get('osderssaati') is not None:
-                    for z in range(pt_oglenarasiders + 1, pt_derssayisi + 1):
-                        ilk, ders, cik = gunun_zili(z - pt_oglenarasiders, gun_id, kontrol.get('osderssaati'),
-                                                    pt_toplanmasuresi,
-                                                    pt_tenefussuresi, pt_ogretmenzilsuresi, pt_derssuresi)
+                            print("{} : {}.Ders ilk {} , ders {} , çıkış {} ".format(self.gunler[gun_id], z, ilk, ders,
+                                                                                     cik))
 
-                        if kontrol.get('toplan') is not None:
-                            print(kontrol['toplan'])
+            else:
+                pass
 
-                        print("{} : {}.Ders ilk {} , ders {} , çıkış {} ".format(gunler[gun_id], z, ilk, ders, cik))
+        for u in self.defaultgunhi():
+            print(f"Tanımlanmamış gün {self.gunler[u]} ..")
 
-        else:
-            pass
 
-    for u in defaultgun():
-        print(f"Tanımlanmamış gün {gunler[u]} ..")
-
-df = defaultgun()
-uret()
+xd = ZilUret(ZilData, DersZamanlama)
+xd.uret()
