@@ -1,9 +1,16 @@
-import sys, os, time, schedule, datetime, sqlite3
-from pygame import mixer
+import datetime
+import os
+import schedule
+import sqlite3
+import sys
+import time
+
 from gtts import gTTS
+from pygame import mixer
 
 con = sqlite3.connect('../zildata.sqlite3')
 cursorObj = con.cursor()
+
 
 def zilCal(mp3Yolu, anlikcalma=False):
     global zilturleri
@@ -36,6 +43,7 @@ def zilCal(mp3Yolu, anlikcalma=False):
                 print("MP3 dosyası bulunamadı!")       
             print(zaman,"zil çaldı.")
 
+
 def duyuruYap(metin):
     try:        
         tts = gTTS(metin, lang="tr")
@@ -48,11 +56,12 @@ def duyuruYap(metin):
         mixer.music.stop()
         mixer.quit()
         os.remove("duyuru.mp3")
-    except:  
+    except:
         print("Google API'si devre dışı")
     finally:
         cursorObj.execute('UPDATE cal_duyur SET metin=NULL')
         con.commit()
+
 
 def gunlukZilleriKur():
     global zilturleri
@@ -71,11 +80,13 @@ def gunlukZilleriKur():
 
     schedule.every().day.at("22:00").do(lambda: kapat())
 
+
 def kapat():
     con.close()
     sys.exit()
 
-#-------------ANA PROGRAM--------------
+# -------------ANA PROGRAM--------------
+
 gunlukZilleriKur()
 while True:
     schedule.run_pending()
