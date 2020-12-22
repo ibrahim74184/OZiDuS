@@ -1,13 +1,6 @@
 from datetime import datetime
 
 
-def donustur_saat(ilk_ts, ders_ts, cik_ts):
-    ilk_d = datetime.fromtimestamp(ilk_ts - 10800)
-    ders_d = datetime.fromtimestamp(ders_ts - 10800)
-    cik_d = datetime.fromtimestamp(cik_ts - 10800)
-    return str(ilk_d).split()[1], str(ders_d).split()[1], str(cik_d).split()[1]
-
-
 class ZilUret:
 
     def __init__(self, _ZilData, _DersZamanlama):
@@ -33,6 +26,13 @@ class ZilUret:
                     self.veri['zilgun'] = x.zilgun
                     self.veri['active'] = x.active
                     self.dveri.append(self.veri)
+
+    @staticmethod
+    def donustur_saat(ilk_ts, ders_ts, cik_ts):
+        ilk_d = datetime.fromtimestamp(ilk_ts - 10800)
+        ders_d = datetime.fromtimestamp(ders_ts - 10800)
+        cik_d = datetime.fromtimestamp(cik_ts - 10800)
+        return str(ilk_d).split()[1], str(ders_d).split()[1], str(cik_d).split()[1]
 
     def oglensonrasi(self, oglenarasisuresi, ossaat):
         oglen_saniye = self.toplam_saniye(oglenarasisuresi)
@@ -108,7 +108,7 @@ class ZilUret:
         ders = (obast_saniye + (z - 1) * (suret_saniye + tenft_saniye))
         cik = obast_saniye + z * suret_saniye + (z - 1) * tenft_saniye
 
-        _ilk, _ders, _cik = donustur_saat(ilk, ders, cik)
+        _ilk, _ders, _cik = self.donustur_saat(ilk, ders, cik)
 
         return _ilk, _ders, _cik
 
@@ -131,17 +131,20 @@ class ZilUret:
             for g in self.dveri:
                 for i in range(1, g.get('derssayisi', None) + 1):
                     if g.get('zilgun', None) in [0, 1, 2, 3, 4]:
-                        ilk, ders, cik = self.gunun_zili(i, **g)
-                        print("{} {}.Ders {} {} {}".format(self.gunler[g.get('zilgun', None)], i, ilk, ders, cik))
+                        self.gunun_zili(i, **g)
+                        # ilk, ders, cik = self.gunun_zili(i, **g)
+                        # print("{} {}.Ders {} {} {}".format(self.gunler[g.get('zilgun', None)], i, ilk, ders, cik))
                     if g.get('zilgun', None) in [5, 6]:
-                        ilk, ders, cik = self.gunun_zili(i, **g)
-                        print("{} {}.Ders {} {} {}".format(self.gunler[g.get('zilgun', None)], i, ilk, ders, cik))
+                        self.gunun_zili(i, **g)
+                        # ilk, ders, cik = self.gunun_zili(i, **g)
+                        # print("{} {}.Ders {} {} {}".format(self.gunler[g.get('zilgun', None)], i, ilk, ders, cik))
 
             for gbf in manup_veri:
                 pztx_veri.update({'zilgun': gbf})
                 for i in range(1, pztx_veri.get('derssayisi', None) + 1):
-                    ilk, ders, cik = self.gunun_zili(i, **pztx_veri)
-                    print("{} {}.Ders {} {} {}".format(self.gunler[pztx_veri.get('zilgun')], i, ilk, ders, cik))
+                    self.gunun_zili(i, **pztx_veri)
+                    # ilk, ders, cik = self.gunun_zili(i, **pztx_veri)
+                    # print("{} {}.Ders {} {} {}".format(self.gunler[pztx_veri.get('zilgun')], i, ilk, ders, cik))
 
         except TypeError:
             pass
