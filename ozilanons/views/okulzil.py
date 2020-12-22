@@ -49,6 +49,12 @@ def login_zil(request):
 
 
 def ZilListView(request):
+    global bayrak
+    if bayrak:
+        DersZamanlama.objects.all().delete()
+        data = ZilUret(ZilData, DersZamanlama)
+        data.uret()
+        bayrak = False
     ziltanimi = ZilData.objects.all()
     context = {'ziltanimi': ziltanimi}
     return render(request, 'ayarlar/new_ayarlar_detail.html', context)
@@ -64,12 +70,6 @@ class ZilDataListView(SingleTableView, ZilUret):
     template_name = 'ayarlar/ayarlar_detail.html'
     # context_table_name = 'table'
     # tables = [ZilData.objects.all(), ]
-    if bayrak:
-        DersZamanlama.objects.all().delete()
-        data = ZilUret(ZilData, DersZamanlama)
-        data.uret()
-        bayrak = False
-
     table_pagination = {
         "per_page": 10
     }
