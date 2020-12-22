@@ -1,16 +1,11 @@
-import datetime
-import os
-import schedule
-import sqlite3
-import sys
-import time
-
-from gtts import gTTS
+import sys, os, time, schedule, datetime, sqlite3
 from pygame import mixer
+from gtts import gTTS
 
 con = sqlite3.connect('../zildata.sqlite3')
 cursorObj = con.cursor()
-
+zilbasligi={0:"toplanma_saati",1:"ders_baslangic",2:"ogretmen_saat",3:"ders_bitis"}
+zilturleri={}
 
 def zilCal(mp3Yolu, anlikcalma=False):
     global zilturleri
@@ -43,7 +38,6 @@ def zilCal(mp3Yolu, anlikcalma=False):
                 print("MP3 dosyası bulunamadı!")       
             print(zaman,"zil çaldı.")
 
-
 def duyuruYap(metin):
     try:        
         tts = gTTS(metin, lang="tr")
@@ -56,37 +50,35 @@ def duyuruYap(metin):
         mixer.music.stop()
         mixer.quit()
         os.remove("duyuru.mp3")
-    except:
+    except:  
         print("Google API'si devre dışı")
     finally:
         cursorObj.execute('UPDATE cal_duyur SET metin=NULL')
         con.commit()
 
-
 def gunlukZilleriKur():
     global zilturleri
     t=datetime.datetime.now()
-    gun=t.strftime("%w")
-    if gun==0:
-        gun=7
+    gun=int(t.strftime("%w"))-1
+    if gun==-1:
+        gun=6
 
-    cursorObj.execute('SELECT * FROM saat WHERE gun_id='+gun)
-    saatler = cursorObj.fetchone()
+    cursorObj.execute('SELECT toplanma_saati,ders_baslangic,ogretmen_saat,ders_bitis FROM saat WHERE ders_gun='+str(gun))
+    saatler = cursorObj.fetchall()   
     if saatler!=None:
-        zilturleri=dict(zip(list(saatler), [d[0] for d in cursorObj.description]))
         for s in saatler:
-            if s!=None and s!=int(gun):
-                schedule.every().day.at(s).do(lambda: zilCal('default.mp3'))
+            for n in range(4):
+                if s!=None and s[n]!="00:00:00":
+                    zilturleri.update({s[n]: zilbasligi[n]})
+                    schedule.every().day.at(s[n]).do(lambda: zilCal('default.mp3'))
 
     schedule.every().day.at("22:00").do(lambda: kapat())
-
 
 def kapat():
     con.close()
     sys.exit()
 
-# -------------ANA PROGRAM--------------
-
+#-------------ANA PROGRAM--------------
 gunlukZilleriKur()
 while True:
     schedule.run_pending()
