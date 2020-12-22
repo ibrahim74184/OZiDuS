@@ -22,6 +22,7 @@ class DersZamanlama(models.Model):
 
     class Meta:
         db_table = 'saat'
+        ordering = ['ders_gun', 'ders_no', ]
 
     def __str__(self):
         return str(self.ders_gun)
