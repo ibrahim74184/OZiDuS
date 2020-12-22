@@ -11,6 +11,7 @@ def mp3_path():
     MP3FILES_FOLDER = os.path.join(PROJECT_ROOT, 'mp3file')
     return MP3FILES_FOLDER
 
+
 class DuyuruData(models.Model):
     metin = models.CharField(verbose_name='Duyuru Metni',max_length=200, null=True)
     mp3yolu = models.FilePathField(path=mp3_path, recursive=False, verbose_name='Melodi Yolu', null=True)
