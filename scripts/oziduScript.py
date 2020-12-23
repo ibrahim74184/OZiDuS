@@ -75,7 +75,7 @@ def gunlukZilleriKur():
                     schedule.every().day.at(s[n]).do(lambda: zilCal('default.mp3'))
 
     schedule.every().day.at("22:00").do(lambda: kapat())
-    print(zilturleri)
+    #print(zilturleri)
     
 def kapat():
     con.close()
