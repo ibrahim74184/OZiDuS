@@ -2,7 +2,9 @@ import sys, os, time, schedule, datetime, sqlite3
 from pygame import mixer
 from gtts import gTTS
 
-con = sqlite3.connect('../zildata.sqlite3')
+kok_dizin=os.path.dirname(os.getcwd())
+
+con = sqlite3.connect(os.path.join(kok_dizin, 'zildata.sqlite3'))
 cursorObj = con.cursor()
 zilbasligi={0:"toplanma_saati",1:"ders_baslangic",2:"ogretmen_saat",3:"ders_bitis"}
 zilturleri={}
@@ -12,7 +14,7 @@ def zilCal(mp3Yolu, anlikcalma=False):
     if anlikcalma:
         try:
             mixer.init()
-            mixer.music.load("../mp3file/"+mp3Yolu)
+            mixer.music.load(os.path.join(kok_dizin,"mp3file",mp3Yolu))
             mixer.music.play()
         except:
             print("MP3 dosyası bulunamadı!")       
@@ -32,7 +34,7 @@ def zilCal(mp3Yolu, anlikcalma=False):
                 else:
                     dosyamp3=yol[0]
                 mixer.init()
-                mixer.music.load("../mp3file/"+dosyamp3)
+                mixer.music.load(os.path.join(kok_dizin,"mp3file",dosyamp3))
                 mixer.music.play()
             except:
                 print("MP3 dosyası bulunamadı!")       
@@ -73,7 +75,8 @@ def gunlukZilleriKur():
                     schedule.every().day.at(s[n]).do(lambda: zilCal('default.mp3'))
 
     schedule.every().day.at("22:00").do(lambda: kapat())
-
+    print(zilturleri)
+    
 def kapat():
     con.close()
     sys.exit()
