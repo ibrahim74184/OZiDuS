@@ -30,8 +30,11 @@ https://drive.google.com/file/d/16wG7iUtaM9_rnpXoyUMUTieuZvPQaFwj/view?usp=shari
 
 
 Okul Zil ve Duyuru Sistemi
+
 Okul Zil ve Duyuru Sistemi Raporu
+
 Kısa Özet
+
 Bilindiği üzere okulların alt yapısında zil sistemi bulunmaktadır. Raspberry Pi’yi web sunucusu olarak kullanarak okul yerel alan ağından; zil ve duyuru otomasyonu gerçekleştirmeyi planladık.
 
 Problem Tanımı
