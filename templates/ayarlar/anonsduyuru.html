@@ -10,15 +10,16 @@ Duyru
 {% block content %}
 <div class="row justify-content-center vertical-center">
 
-            <form action="ZIL_KAPAT_AC">
-                <input type="submit" class="btn btn-info" value="Zili Kapat">
+            <form method="POST" class="post-form" >{% csrf_token %}
+                <label for="id_zilaktif" tabindex="0" class="checkbox">
+                <input type="checkbox"  id="id_zilaktif" name="zilaktif" value="{{zilaktif}}" />Option Text</label>
+                <button class="btn btn-info" type="submit" >{% if icerik == 0 %}Kapat{% else %}Aç{% endif %}</button>
             </form>
-
 </div>
 <br>
 <br>
 <div class="row justify-content-center vertical-center">
-            <form action="CALMA_SCRIPT">
+                <form action="CALMA_SCRIPT">
                 <div class="form-row align-items-center">
                 <div class="col-auto my-1">
 
@@ -35,7 +36,6 @@ Duyru
                 </div>
                 </div>
             </form>
-
 </div>
 <br>
 <br>
@@ -44,7 +44,7 @@ Duyru
                 <label for="id_metin"></label>
                 <textarea class="form-control" name="metin" required id="id_metin" value="{{metin}}" cols="40" rows="5" ></textarea><br>
                 <div class="row justify-content-center vertical-center">
-                   <button class="btn btn-primary btn-sm" type="submit" >Kaydet</button>
+                   <button class="btn btn-primary btn-sm" type="submit" >Duyuru Yap</button>
                 </div>
             </form>
 

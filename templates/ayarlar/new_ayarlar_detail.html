@@ -58,7 +58,6 @@ Zil Özelleştirme
                 <tbody >
                      {% for  def in ziltanimi %}
                     <tr class="odd">
-
                             <td >{{def.dersbaslangicsaati}}</td>
                             <td >{{def.toplanmasuresi}}</td>
                             <td >{{def.ogretmenzilsuresi}}</td>
@@ -67,8 +66,8 @@ Zil Özelleştirme
                             <td >{{def.tenefussuresi}}</td>
                             <td >{{def.oglenarasiders}}</td>
                             <td >{{def.oglenarasisuresi}}</td>
-                            <td >{{def.zilgun}}</td>
-                            <td ><span class="{{def.active}}">✔</span></td>
+                            <td >{{def.get_zilgun_display}}</td>
+                            <td ><span class="{{def.active}}">{% if def.active %}✔{% else %}X{% endif %}</span></td>
                         <td >
                             <a class="btn btn-info btn-sm" href="{% url 'guncelle' def.id %}">Düzenle</a>
                         </td>

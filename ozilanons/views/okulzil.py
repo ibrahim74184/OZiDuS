@@ -9,7 +9,6 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from scripts.oziliUret import ZilUret
 
-
 # Create your views here.
 bayrak = True
 
@@ -59,10 +58,12 @@ def ZilListView(request):
     context = {'ziltanimi': ziltanimi}
     return render(request, 'ayarlar/new_ayarlar_detail.html', context)
 
+
 def ZilListViewAksam(request):
     ziltanimi = OkulAksamZaman.objects.all()
     context = {'ziltanimi': ziltanimi}
     return render(request, 'ayarlar/new_ayarlar_detail.html', context)
+
 
 class ZilDataListView(SingleTableView, ZilUret):
     model = ZilData
@@ -127,9 +128,10 @@ def post_aksamzildata_new(request):
 
 def zilikapat(request):
     icerik = get_object_or_404(DuyuruData, id=1)
-    form = DuyuruDataForm(request.POST or None, request.FILES or None, instance=icerik)
+    form = ZilDurumForm(request.POST or None, request.FILES or None, instance=icerik)
     if form.is_valid():
         icerik = form.save(commit=False)
+        # icerik.zilaktif = 1
         icerik.user = request.user
         icerik.save()
         messages.success(request, 'İçerik Güncellendi')
@@ -171,4 +173,3 @@ def guncelle(request, id):
         messages.success(request, 'İçerik Güncellendi')
         return redirect('zillistview')
     return render(request, 'ayarlar/post_zildata_edit.html', {'form': form})
-

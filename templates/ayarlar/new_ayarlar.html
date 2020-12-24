@@ -24,15 +24,11 @@ Zil Özelleştirme
             <div class="form-group row mt-1">
                 <div class="col">
                     <label for="id_zilgun">Tanımlanan Günü:</label>
-                <select name="zilgun" required id="id_zilgun">
-                    <option value="{{ zilgun }}" selected>Günü Seçin</option>
-                    <option value="0">Pazartesi</option>
-                    <option value="1">Salı</option>
-                    <option value="2">Çarşamba</option>
-                    <option value="3">Perşembe</option>
-                    <option value="4">Cuma</option>
-                    <option value="5">Cumartesi</option>
-                    <option value="6">Pazar</option>
+                    <select name="zilgun" required id="id_zilgun">
+                    {% for x,y in form.fields.zilgun.choices %}
+                    <option value="{{ x }}" {% if form.fields.zilgun.value == x %} selected {% endif %}>{{ y }}</option>
+                    {% endfor %}
+
                 </select>
                 </div>
             </div>

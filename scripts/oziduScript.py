@@ -2,13 +2,15 @@ import sys, os, time, schedule, datetime, sqlite3
 from pygame import mixer
 from gtts import gTTS
 
-kok_dizin=os.path.dirname(os.getcwd())
-
+# kok_dizin=os.path.dirname(os.getcwd())
+# kok_dizin = os.path.dirname(os.path.realpath(__file__))
+kok_dizin, filename = os.path.split(os.path.dirname(os.path.abspath(__file__)))
 con = sqlite3.connect(os.path.join(kok_dizin, 'zildata.sqlite3'))
+
 cursorObj = con.cursor()
 zilbasligi={0:"toplanma_saati",1:"ders_baslangic",2:"ogretmen_saat",3:"ders_bitis"}
 zilturleri={}
-
+print(kok_dizin)
 def zilCal(mp3Yolu, anlikcalma=False):
     global zilturleri
     if anlikcalma:
@@ -23,7 +25,7 @@ def zilCal(mp3Yolu, anlikcalma=False):
     else:
         cursorObj.execute('SELECT zilaktif FROM cal_duyur')
         zil = cursorObj.fetchone()
-        if bool(zil[4]):            
+        if bool(zil[4]):
             simdi=datetime.datetime.now()
             zaman=simdi.strftime("%H:%M")
             cursorObj.execute('SELECT yol FROM melodipath WHERE melodiad="'+zilturleri[zaman][:3]+'"')
@@ -31,10 +33,12 @@ def zilCal(mp3Yolu, anlikcalma=False):
             try:
                 if yol[0]==None:
                     dosyamp3="default.mp3"
+                    print("default")
                 else:
                     dosyamp3=yol[0]
                 mixer.init()
                 mixer.music.load(os.path.join(kok_dizin,"mp3file",dosyamp3))
+                print("zil sesi")
                 mixer.music.play()
             except:
                 print("MP3 dosyası bulunamadı!")       
@@ -59,6 +63,7 @@ def duyuruYap(metin):
         con.commit()
 
 def gunlukZilleriKur():
+
     global zilturleri
     t=datetime.datetime.now()
     gun=int(t.strftime("%w"))-1
@@ -73,7 +78,6 @@ def gunlukZilleriKur():
                 if s!=None and s[n]!="00:00:00":
                     zilturleri.update({s[n]: zilbasligi[n]})
                     schedule.every().day.at(s[n]).do(lambda: zilCal('default.mp3'))
-
     schedule.every().day.at("22:00").do(lambda: kapat())
     #print(zilturleri)
     

@@ -4,6 +4,12 @@ from django.db import models
 # Create your models here.
 
 class OkulZaman(models.Model):
+    GUN = [[0, 'Pazartesi'],
+           [1, 'Salı'], [2, 'Çarşamba'],
+           [3, 'Perşembe'], [4, 'Cuma'],
+           [5, 'Cumartesi'],
+           [6, 'Pazar'], ]
+
     dersbaslangicsaati = models.TimeField(verbose_name='Derslerin Başlangıç Saati', default='09:00', auto_now=False)
     toplanmasuresi = models.TimeField(verbose_name='Toplanma Süresi', default='00:10')
     ogretmenzilsuresi = models.TimeField(verbose_name='Öğretmen Ders Bildirim Zili', default='00:03')
@@ -12,11 +18,7 @@ class OkulZaman(models.Model):
     tenefussuresi = models.TimeField(verbose_name='Tenefüs Süresi', default='00:10')
     oglenarasiders = models.SmallIntegerField(verbose_name='Öğlen Arası', default=6)
     oglenarasisuresi = models.TimeField(verbose_name='Öğlen Arası Süresi', default='00:45')
-    zilgun = models.SmallIntegerField(verbose_name='Tanımlanan Günü', choices=[[0, 'Pazartesi'],
-                                                                                [1, 'Salı'], [2, 'Çarşamba'],
-                                                                                [3, 'Perşembe'], [4, 'Cuma'],
-                                                                                [5, 'Cumartesi'],
-                                                                                [6, 'Pazar']], default=0, unique=True)
+    zilgun = models.SmallIntegerField(verbose_name='Tanımlanan Günü', choices=GUN, default=0, unique=True)
     active = models.BooleanField(verbose_name='Aktif Pasif', default=False)
     published_date = models.DateTimeField(verbose_name='Eklenme Tarihi', auto_now_add=True)
 
